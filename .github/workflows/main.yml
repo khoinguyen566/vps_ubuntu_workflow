@@ -35,7 +35,7 @@ jobs:
           TS_IP=$(tailscale ip -4)
           
           # Tạo mật khẩu ngẫu nhiên an toàn (chỉ gồm chữ và số, dài 12 ký tự)
-          RANDOM_PASS=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 12)
+          RANDOM_PASS=$(python3 -c "import secrets, string; chars = string.ascii_letters + string.digits + '!@#$%^&*()_+-='; pwd = [secrets.choice(string.ascii_uppercase) for _ in range(2)] + [secrets.choice(string.digits) for _ in range(2)] + [secrets.choice('!@#$%^&*()_+-=') for _ in range(2)] + [secrets.choice(chars) for _ in range(18)]; secrets.SystemRandom().shuffle(pwd); print(''.join(pwd))")
           
           # Đổi mật khẩu cho user 'runner'
           echo "runner:$RANDOM_PASS" | sudo chpasswd
