@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Maximize Build Disk Space
-        uses: easimon/maximize-build-disk-space@main
+        uses: easimon/maximize-build-space@master
         with:
           root-reserve-mb: 5120   # Chừa lại 5GB cho hệ thống host hoạt động ổn định
           swap-size-mb: 1024      # Thu nhỏ RAM ảo (Swap) xuống 1GB để lấy thêm ổ cứng
