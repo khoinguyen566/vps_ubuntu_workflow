@@ -1,0 +1,71 @@
+name: Ubuntu Setup ( Space Optimer )
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Maximize Build Disk Space
+        uses: easimon/maximize-build-disk-space@main
+        with:
+          root-reserve-mb: 5120   # Chừa lại 5GB cho hệ thống host hoạt động ổn định
+          swap-size-mb: 1024      # Thu nhỏ RAM ảo (Swap) xuống 1GB để lấy thêm ổ cứng
+          remove-dotnet: 'true'   # Gỡ bỏ hoàn toàn .NET SDK
+          remove-android: 'true'  # Gỡ bỏ hoàn toàn bộ cài Android khổng lồ
+          remove-haskell: 'true'  # Gỡ bỏ hoàn toàn Haskell
+          remove-codeql: 'true'   # Gỡ bỏ các công cụ quét mã bảo mật CodeQL
+          remove-docker-images: 'true' # Xóa sạch các bộ cài Docker mặc định của GitHub
+
+      # Bước in ra màn hình để bạn kiểm tra dung lượng ổ đĩa đã tăng vọt lên 130GB+
+      - name: Verify Free Space
+        run: |
+          echo "=== Kiểm tra dung lượng ổ đĩa sau khi gộp ==="
+          df -h /
+
+      - name: System Info
+        run: |
+          echo "OS:"
+          cat /etc/os-release
+          uname -a
+
+      - name: Update packages & Python
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl wget git unzip python3 python3-pip
+
+      - name: Kết nối Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          
+      - name: Cấu hình SSH & Tạo mật khẩu ngẫu nhiên
+        run: |
+          # Đảm bảo dịch vụ SSH khởi động và cho phép đăng nhập bằng mật khẩu
+          sudo systemctl enable --now ssh
+          
+          # Lấy IP Tailscale
+          TS_IP=$(tailscale ip -4)
+          
+          # Tạo mật khẩu ngẫu nhiên an toàn (chỉ gồm chữ và số, dài 12 ký tự)
+          RANDOM_PASS=$(python3 -c "import secrets, string; chars = string.ascii_letters + string.digits + '!@#$%^&*()_+-='; pwd = [secrets.choice(string.ascii_uppercase) for _ in range(2)] + [secrets.choice(string.digits) for _ in range(2)] + [secrets.choice('!@#$%^&*()_+-=') for _ in range(2)] + [secrets.choice(chars) for _ in range(18)]; secrets.SystemRandom().shuffle(pwd); print(''.join(pwd))")
+          
+          # Đổi mật khẩu cho user 'runner'
+          echo "runner:$RANDOM_PASS" | sudo chpasswd
+          
+          echo "=================================================="
+          echo "🎉 MÁY ẢO ĐÃ SẴN SÀNG KẾT NỐI!"
+          echo "--------------------------------------------------"
+          echo " Host (IP):  $TS_IP"
+          echo " User:       runner"
+          echo " Password:   $RANDOM_PASS"
+          echo " Command:    ssh runner@$TS_IP"
+          echo "=================================================="
+          
+      - name: Giữ VPS chạy (Keep-alive)
+        run: |
+          echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
+          sleep 19800
