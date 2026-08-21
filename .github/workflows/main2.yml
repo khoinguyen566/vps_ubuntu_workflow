@@ -9,16 +9,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Maximize Build Disk Space
-        uses: easimon/maximize-build-space@master
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
         with:
-          root-reserve-mb: 5120   # Chừa lại 5GB cho hệ thống host hoạt động ổn định
-          swap-size-mb: 1024      # Thu nhỏ RAM ảo (Swap) xuống 1GB để lấy thêm ổ cứng
-          remove-dotnet: 'true'   # Gỡ bỏ hoàn toàn .NET SDK
-          remove-android: 'true'  # Gỡ bỏ hoàn toàn bộ cài Android khổng lồ
-          remove-haskell: 'true'  # Gỡ bỏ hoàn toàn Haskell
-          remove-codeql: 'true'   # Gỡ bỏ các công cụ quét mã bảo mật CodeQL
-          remove-docker-images: 'true' # Xóa sạch các bộ cài Docker mặc định của GitHub
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
 
       # Bước in ra màn hình để bạn kiểm tra dung lượng ổ đĩa đã tăng vọt lên 130GB+
       - name: Verify Free Space
