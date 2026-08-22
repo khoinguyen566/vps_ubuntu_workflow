@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
+        uses: khoinguyen566/Optimer-Disk-Space@main
         with:
           tool-cache: true
           android: true
