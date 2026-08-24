@@ -21,10 +21,6 @@ jobs:
           swap-storage: true
 
       # Bước in ra màn hình để bạn kiểm tra dung lượng ổ đĩa đã tăng vọt lên 130GB+
-      - name: Verify Free Space
-        run: |
-          echo "=== Kiểm tra dung lượng ổ đĩa sau khi gộp ==="
-          df -h /
 
       - name: System Info
         run: |
