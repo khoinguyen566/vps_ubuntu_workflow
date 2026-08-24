@@ -24,6 +24,7 @@ jobs:
           RC_PACKAGES=$(dpkg -l | grep '^rc' | awk '{print $2}')
           if [ ! -z "$RC_PACKAGES" ]; then
             sudo dpkg --purge $RC_PACKAGES
+          fi
       - name: System Info
         run: |
           echo "OS:"
