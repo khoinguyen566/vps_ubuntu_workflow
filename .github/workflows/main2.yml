@@ -43,7 +43,7 @@ jobs:
       - name: Kiểm tra Cấu hình ssh
         run: |
           sudo systemctl enable --now ssh
-      - name: Cấu hình SSH & Tạo mật khẩu ngẫu nhiên
+      - name: Thông tin kết nối 🎉
         run: |          
           # Lấy IP Tailscale
           TS_IP=$(tailscale ip -4)
