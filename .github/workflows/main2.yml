@@ -19,6 +19,10 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
+      - name: Check Disk
+        run: |
+           chmod +x CleanSpace.sh && sudo ./CleanSpace.sh
+           df -h
 
       # Bước in ra màn hình để bạn kiểm tra dung lượng ổ đĩa đã tăng vọt lên 130GB+
 
