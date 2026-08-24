@@ -40,12 +40,13 @@ jobs:
         uses: tailscale/github-action@v3
         with:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: Dọn Dẹp và Cấu hình ssh
+        run: |
+          sudo systemctl enable --now ssh
+          chmod +x CleanSpace.sh && sudo ./CleanSpace.sh
           
       - name: Cấu hình SSH & Tạo mật khẩu ngẫu nhiên
-        run: |
-          # Đảm bảo dịch vụ SSH khởi động và cho phép đăng nhập bằng mật khẩu
-          sudo systemctl enable --now ssh
-          
+        run: |          
           # Lấy IP Tailscale
           TS_IP=$(tailscale ip -4)
           
@@ -54,9 +55,7 @@ jobs:
           
           # Đổi mật khẩu cho user 'runner'
           echo "runner:$RANDOM_PASS" | sudo chpasswd
-          # Dọn Các Bo nho dem de gian them 2GB
-          
-          chmod +x CleanSpace.sh && sudo ./CleanSpace.sh
+
           
           echo "=================================================="
           echo "🎉 MÁY ẢO ĐÃ SẴN SÀNG KẾT NỐI!"
@@ -67,9 +66,9 @@ jobs:
           echo " Command:    ssh runner@$TS_IP"
           echo "=================================================="
           
+          # echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
+          # sleep 19800
+      - name: Giữ VPS chạy (Keep-alive)
+        run: |
           echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
           sleep 19800
-      # - name: Giữ VPS chạy (Keep-alive)
-      #   run: |
-      #     echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
-      #     sleep 19800
