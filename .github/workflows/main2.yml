@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Free Disk Space (Ubuntu)
+      - name: Free Disk Space (Ubuntu) Mất 1 - 5 Phút
         uses: khoinguyen566/Optimer-Disk-Space@main
         with:
           tool-cache: true
@@ -19,12 +19,11 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
-      - name: Check Disk
+      - name: Clean Packages
         run: |
-           df -h
-
-      # Bước in ra màn hình để bạn kiểm tra dung lượng ổ đĩa đã tăng vọt lên 130GB+
-
+          RC_PACKAGES=$(dpkg -l | grep '^rc' | awk '{print $2}')
+          if [ ! -z "$RC_PACKAGES" ]; then
+            sudo dpkg --purge $RC_PACKAGES
       - name: System Info
         run: |
           echo "OS:"
@@ -54,6 +53,9 @@ jobs:
           
           # Đổi mật khẩu cho user 'runner'
           echo "runner:$RANDOM_PASS" | sudo chpasswd
+          # Dọn Các Bo nho dem de gian them 2GB
+          
+          chmod +x CleanSpace.sh && sudo ./CleanSpace.sh
           
           echo "=================================================="
           echo "🎉 MÁY ẢO ĐÃ SẴN SÀNG KẾT NỐI!"
@@ -67,5 +69,4 @@ jobs:
       - name: Giữ VPS chạy (Keep-alive)
         run: |
           echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
-          chmod +x CleanSpace.sh && sudo ./CleanSpace.sh
           sleep 19800
