@@ -67,7 +67,9 @@ jobs:
           echo " Command:    ssh runner@$TS_IP"
           echo "=================================================="
           
-      - name: Giữ VPS chạy (Keep-alive)
-        run: |
           echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
           sleep 19800
+      # - name: Giữ VPS chạy (Keep-alive)
+      #   run: |
+      #     echo "Đang giữ máy ảo chạy. Tiến trình này sẽ tự tắt sau 5.5 tiếng."
+      #     sleep 19800
